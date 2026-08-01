@@ -286,7 +286,13 @@ def send_reset_otp(app, recipient, otp):
 
 def create_app():
     app = Flask(__name__)
-    app.config.from_object(LocalConfig if os.getenv("FLASK_ENV") == "local" else Config)
+    if os.getenv("FLASK_ENV") == "local":
+        app.config.from_object(LocalConfig)
+    else:
+        app.config.from_object(Config)
+
+    print("DATABASE_URL =", os.getenv("DATABASE_URL"))
+    print("SQLALCHEMY_DATABASE_URI =", app.config["SQLALCHEMY_DATABASE_URI"])
 
     db.init_app(app)
 
