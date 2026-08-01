@@ -1,9 +1,13 @@
 import os
+import logging
 
 from dotenv import load_dotenv
 from groq import Groq
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
@@ -68,7 +72,7 @@ Question:
         messages = [{"role": "system", "content": SYSTEM_PROMPT}] + history
 
         completion = client.chat.completions.create(
-            model="llama-3.3-70b-versatile",
+            model=GROQ_MODEL,
             messages=messages,
             temperature=0.2,
             max_tokens=400,
@@ -81,4 +85,5 @@ Question:
         return reply
 
     except Exception:
+        logger.exception("Groq chatbot request failed")
         return "Sorry, something went wrong."

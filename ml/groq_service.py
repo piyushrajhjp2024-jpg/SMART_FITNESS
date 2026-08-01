@@ -1,9 +1,13 @@
 import os
 import json
+import logging
 from dotenv import load_dotenv
 from groq import Groq
 
 load_dotenv()
+
+logger = logging.getLogger(__name__)
+GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
 
 client = Groq(
     api_key=os.getenv("GROQ_API_KEY")
@@ -110,10 +114,10 @@ Return ONLY valid JSON.
     "lunch":"",
     "dinner":"",
     "snacks":"",
-    "workout":"",
+    "workout":{{}},
     "water":"",
     "sleep":"",
-    "health_tips":"",
+    "health_tips":[],
     "motivation":""
 }}
 
@@ -122,10 +126,10 @@ Rules:
 - Greeting should use the user's name.
 - BMI analysis should explain whether BMI is healthy.
 - Meal recommendations should use Indian foods.
-- Workout should include Monday to Sunday.
+- Workout should be a JSON object with Monday to Sunday as keys.
 - Water should be in litres/day.
 - Sleep should be in hours/day.
-- Health tips should be 5 bullet points.
+- Health tips should be a JSON array of 5 short tips.
 - Motivation should be short.
 """
 
@@ -133,7 +137,7 @@ Rules:
 
         response = client.chat.completions.create(
 
-            model="llama-3.3-70b-versatile",
+            model=GROQ_MODEL,
 
             messages=[
                 {
@@ -156,5 +160,6 @@ Rules:
 
         return normalize_fitness_plan(json.loads(response.choices[0].message.content))
 
-    except Exception as e:
+    except Exception:
+        logger.exception("Groq AI coach request failed")
         return _fallback_plan()
