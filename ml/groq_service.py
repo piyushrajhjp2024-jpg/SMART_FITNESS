@@ -2,16 +2,11 @@ import os
 import json
 import logging
 from dotenv import load_dotenv
-from groq import Groq
+from ml.groq_client import create_chat_completion
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
-
-client = Groq(
-    api_key=os.getenv("GROQ_API_KEY")
-)
 
 AI_PLAN_KEYS = {
     "greeting": "",
@@ -135,10 +130,7 @@ Rules:
 
     try:
 
-        response = client.chat.completions.create(
-
-            model=GROQ_MODEL,
-
+        content = create_chat_completion(
             messages=[
                 {
                     "role": "system",
@@ -149,16 +141,14 @@ Rules:
                     "content": prompt
                 }
             ],
-
             temperature=0.7,
-
+            max_tokens=1200,
             response_format={
                 "type": "json_object"
             }
-
         )
 
-        return normalize_fitness_plan(json.loads(response.choices[0].message.content))
+        return normalize_fitness_plan(json.loads(content))
 
     except Exception:
         logger.exception("Groq AI coach request failed")

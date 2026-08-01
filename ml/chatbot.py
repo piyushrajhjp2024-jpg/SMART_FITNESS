@@ -2,14 +2,11 @@ import os
 import logging
 
 from dotenv import load_dotenv
-from groq import Groq
+from ml.groq_client import create_chat_completion
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
-
-client = Groq(api_key=os.getenv("GROQ_API_KEY"))
 
 SYSTEM_PROMPT = """
 You are FitBot, the official AI Fitness Assistant of Smart Fitness Planner.
@@ -71,14 +68,12 @@ Question:
 
         messages = [{"role": "system", "content": SYSTEM_PROMPT}] + history
 
-        completion = client.chat.completions.create(
-            model=GROQ_MODEL,
+        reply = create_chat_completion(
             messages=messages,
             temperature=0.2,
             max_tokens=400,
-        )
+        ).strip()
 
-        reply = completion.choices[0].message.content.strip()
         history.append({"role": "assistant", "content": reply})
         conversation_memory[user_id] = history[-10:]
 
