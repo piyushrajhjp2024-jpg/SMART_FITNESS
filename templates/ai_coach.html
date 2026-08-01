@@ -411,6 +411,10 @@ Stay consistent and follow your AI recommendations every day.
                         <li class="list-group-item">
                             <strong>{{ day }}</strong>: {{ plan }}
                         </li>
+                    {% else %}
+                        <li class="list-group-item">
+                            Workout recommendations are temporarily unavailable. Try again later.
+                        </li>
                     {% endfor %}
                 </ul>
 
@@ -494,6 +498,10 @@ Stay consistent and follow your AI recommendations every day.
                 {% for tip in ai.health_tips %}
                     <li class="list-group-item">
                         {{ tip }}
+                    </li>
+                {% else %}
+                    <li class="list-group-item">
+                        Keep your meals balanced, move daily, hydrate well, and sleep on time.
                     </li>
                 {% endfor %}
             </ul>

@@ -80,7 +80,7 @@ from ml.bmi import bmi_category, calculate_bmi, recommend_goal_from_bmi
 from ml.calories import calculate_bmr, goal_calories, maintenance_calories
 from ml.recommendation import diet_for_goal, workout_for_goal, yoga_for_focus
 
-from ml.groq_service import generate_fitness_plan
+from ml.groq_service import generate_fitness_plan, normalize_fitness_plan
 from ml.chatbot import get_chat_response
 
 GOAL_MEAL_DETAILS = {
@@ -906,14 +906,12 @@ def create_app():
         }
 
         try:
-            ai_data = generate_fitness_plan(user_data)
+            ai_data = normalize_fitness_plan(generate_fitness_plan(user_data))
 
         except Exception as e:
             app.logger.exception("AI Coach Error")
 
-            ai_data = {
-                "error": "Unable to generate your fitness plan right now. Please try again later."
-            }
+            ai_data = normalize_fitness_plan(None)
 
         return render_template(
             "ai_coach.html",
@@ -932,10 +930,15 @@ def create_app():
     @login_required
     def chat_api():
 
-        data = request.get_json()
+        data = request.get_json(silent=True) or {}
 
         message = data.get("message", "")
         language = data.get("language", "en")
+
+        if not message.strip():
+            return jsonify({
+                "reply": "Please type a fitness question first."
+            })
 
         profile = current_user.profile
 
@@ -954,12 +957,19 @@ def create_app():
                 "calories": profile.calories
             }
 
-        reply = get_chat_response(
-            message=message,
-            language=language,
-            user_id=current_user.id,
-            user_profile=user_profile
-        )
+        try:
+            reply = get_chat_response(
+                message=message,
+                language=language,
+                user_id=current_user.id,
+                user_profile=user_profile
+            )
+        except Exception:
+            app.logger.exception("Chat API Error")
+            reply = "Sorry, I could not reach the AI assistant right now. Please try again."
+
+        if not reply:
+            reply = "Sorry, I could not generate a reply right now. Please try again."
 
         return jsonify({
             "reply": reply

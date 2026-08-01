@@ -391,9 +391,15 @@ async function sendMessage(){
 
         const data = await response.json();
 
-        addMessage("bot",data.reply);
+        if(!response.ok){
+            throw new Error(data.reply || "Chat request failed.");
+        }
 
-        speakText(data.reply);
+        const reply = data.reply || "Sorry, I could not generate a reply right now. Please try again.";
+
+        addMessage("bot",reply);
+
+        speakText(reply);
 
     }
 
@@ -401,7 +407,7 @@ async function sendMessage(){
 
         addMessage(
             "bot",
-            "Server Error."
+            "Sorry, I could not reach the AI assistant right now. Please try again."
         );
 
         console.error(error);

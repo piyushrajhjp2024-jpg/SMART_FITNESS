@@ -31,7 +31,7 @@
     </form>
 
     <div class="form-panel">
-        <h2>10-15 Second Yoga Clip</h2>
+        <h2>Full Yoga Video</h2>
         <p class="muted active-video-name">
             Showing: {{ focus|replace("_", " ")|title }} flow
         </p>
@@ -39,8 +39,8 @@
         <div class="video-frame">
             <iframe
                 class="yoga-player"
-                src="{{ detail.video }}?start=0&end=15&rel=0&modestbranding=1"
-                title="{{ focus|replace('_', ' ')|title }} yoga clip"
+                src="{{ detail.video }}?rel=0&modestbranding=1"
+                title="{{ focus|replace('_', ' ')|title }} yoga video"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowfullscreen>
             </iframe>
@@ -49,7 +49,7 @@
            href="{{ detail.video|replace('https://www.youtube-nocookie.com/embed/', 'https://www.youtube.com/watch?v=') }}"
            target="_blank"
            rel="noopener">
-            Open this clip on YouTube
+            Open this video on YouTube
         </a>
     </div>
 
@@ -63,7 +63,7 @@
                 data-title="{{ step.name }}">
             <strong>Step {{ loop.index }}</strong>
             <span>{{ step.name }}</span>
-            <small>Play 15 sec clip</small>
+            <small>Play full video</small>
         </button>
     {% endfor %}
 </div>
@@ -84,9 +84,9 @@ function titleFromFocus(focus) {
     return focus.replaceAll("_", " ").replace(/\b\w/g, letter => letter.toUpperCase());
 }
 
-function clipUrl(video, autoplay = false) {
+function videoUrl(video, autoplay = false) {
     const autoplayParam = autoplay ? "&autoplay=1" : "";
-    return `${video}?start=0&end=15${autoplayParam}&rel=0&modestbranding=1`;
+    return `${video}?rel=0&modestbranding=1${autoplayParam}`;
 }
 
 function watchUrl(video) {
@@ -98,7 +98,7 @@ function bindStepCards() {
         card.addEventListener("click", () => {
             document.querySelectorAll(".step-card").forEach(item => item.classList.remove("done"));
             card.classList.add("done");
-            player.src = clipUrl(card.dataset.video, true);
+            player.src = videoUrl(card.dataset.video, true);
             watchLink.href = watchUrl(card.dataset.video);
             activeVideoName.textContent = `Showing: ${card.dataset.title}`;
         });
@@ -113,8 +113,8 @@ function updateYogaFocus(focus) {
     yogaFlowTitle.textContent = `${title} Flow`;
     yogaPosesText.textContent = yogaPoses[focus] || yogaPoses.stress;
     activeVideoName.textContent = `Showing: ${title} flow`;
-    player.title = `${title} yoga clip`;
-    player.src = clipUrl(detail.video);
+    player.title = `${title} yoga video`;
+    player.src = videoUrl(detail.video);
     watchLink.href = watchUrl(detail.video);
 
     stepGrid.replaceChildren(
@@ -130,7 +130,7 @@ function updateYogaFocus(focus) {
             button.dataset.title = step.name;
             number.textContent = `Step ${index + 1}`;
             name.textContent = step.name;
-            hint.textContent = "Play 15 sec clip";
+            hint.textContent = "Play full video";
 
             button.append(number, name, hint);
             return button;
