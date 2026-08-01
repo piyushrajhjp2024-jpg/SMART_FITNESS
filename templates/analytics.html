@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="container mt-4">
+
+    <h2 class="mb-4">
+        📊 Smart Fitness Analytics Dashboard
+    </h2>
+
+    <!-- KPI Cards -->
+    <div class="row g-4">
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h6>Total Users</h6>
+                <h2 class="text-primary">
+                    {{ total_users }}
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h6>Total Profiles</h6>
+                <h2 class="text-success">
+                    {{ total_profiles }}
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h6>Progress Records</h6>
+                <h2 class="text-info">
+                    {{ total_progress }}
+                </h2>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="card shadow border-0 text-center p-4">
+                <h6>Average BMI</h6>
+                <h2 class="text-danger">
+                    {{ "%.2f"|format(avg_bmi) }}
+                </h2>
+            </div>
+        </div>
+
+    </div>
+
+    <br>
+
+    <!-- Charts -->
+
+    <div class="row">
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0 p-3">
+
+                <h4 class="mb-3">
+                    📈 Weight Trend
+                </h4>
+
+                {% if weight_chart %}
+
+                    {{ weight_chart|safe }}
+
+                {% else %}
+
+                    <div class="alert alert-warning">
+
+                        No weight records available.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+        <div class="col-lg-6">
+
+            <div class="card shadow border-0 p-3">
+
+                <h4 class="mb-3">
+                    📊 BMI Trend
+                </h4>
+
+                {% if bmi_chart %}
+
+                    {{ bmi_chart|safe }}
+
+                {% else %}
+
+                    <div class="alert alert-warning">
+
+                        No BMI records available.
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <br>
+
+    <!-- AI Insights -->
+
+    <div class="card shadow border-0 p-4">
+
+        <h4 class="mb-3">
+            🤖 AI Health Insights
+        </h4>
+
+        <ul class="list-group">
+
+            {% if avg_bmi > 25 %}
+
+                <li class="list-group-item">
+
+                    ⚠️ Average BMI is above the healthy range.
+
+                </li>
+
+            {% elif avg_bmi < 18.5 and avg_bmi > 0 %}
+
+                <li class="list-group-item">
+
+                    ⚠️ Average BMI is below the healthy range.
+
+                </li>
+
+            {% else %}
+
+                <li class="list-group-item">
+
+                    ✅ BMI is within the healthy range.
+
+                </li>
+
+            {% endif %}
+
+            {% if total_progress == 0 %}
+
+                <li class="list-group-item">
+
+                    📈 Start adding progress records to visualize your journey.
+
+                </li>
+
+            {% else %}
+
+                <li class="list-group-item">
+
+                    🎯 Keep updating your progress regularly to monitor improvements.
+
+                </li>
+
+            {% endif %}
+
+        </ul>
+
+    </div>
+
+</div>
+
+{% endblock %}

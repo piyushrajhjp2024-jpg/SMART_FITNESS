@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="workout-header">
+    <div>
+        <p class="eyebrow">{{ goal|replace("_", " ")|title }} Plan</p>
+        <h1>Workout Plan</h1>
+        <p class="muted">Tap any day to view the exact exercises, sets, duration, and training focus.</p>
+    </div>
+    <img
+        src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1200&q=80"
+        alt="Gym workout setup with strength training equipment"
+    >
+</section>
+
+<section class="workout-timeline" aria-label="Weekly workout plan">
+    {% for day in plan %}
+    <article class="workout-day {% if loop.first %}is-open{% endif %}">
+        <button class="workout-day-toggle" type="button" aria-expanded="{{ 'true' if loop.first else 'false' }}">
+            <span class="day-index">{{ "%02d"|format(loop.index) }}</span>
+            <span>
+                <strong>{{ day.day }}</strong>
+                <small>{{ day.focus }} • {{ day.duration }}</small>
+            </span>
+            <span class="intensity">{{ day.intensity }}</span>
+        </button>
+        <div class="workout-day-details">
+            <img src="{{ day.image }}" alt="{{ day.focus }} workout">
+            <div class="exercise-panel">
+                <h2>{{ day.focus }}</h2>
+                <ul class="exercise-list">
+                    {% for exercise in day.exercises %}
+                        <li><button class="video-link" type="button" data-video-query="{{ exercise }} exercise proper form">{{ exercise }}</button></li>
+                    {% endfor %}
+                </ul>
+                {% if day.note %}
+                    <p class="trainer-note">{{ day.note }}</p>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+    {% endfor %}
+</section>
+
+<script>
+    document.querySelectorAll(".workout-day-toggle").forEach((button) => {
+        button.addEventListener("click", () => {
+            const day = button.closest(".workout-day");
+            const isOpen = day.classList.toggle("is-open");
+            button.setAttribute("aria-expanded", String(isOpen));
+        });
+    });
+    document.querySelectorAll(".video-link").forEach((button) => {
+        button.addEventListener("click", () => {
+            const url = `https://www.youtube.com/results?search_query=${encodeURIComponent(button.dataset.videoQuery)}`;
+            window.open(url, "_blank", "noopener");
+        });
+    });
+</script>
+{% endblock %}

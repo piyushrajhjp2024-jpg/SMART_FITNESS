@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Fitness Coach</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" rel="stylesheet">
+
+<style>
+
+body{
+
+    background:linear-gradient(135deg,#0f172a,#1e3a8a,#2563eb);
+
+    min-height:100vh;
+
+    color:white;
+
+    font-family:'Segoe UI',sans-serif;
+
+}
+
+.container{
+
+    padding-top:40px;
+
+    padding-bottom:50px;
+
+}
+
+.glass{
+
+    background:rgba(255,255,255,.10);
+
+    backdrop-filter:blur(15px);
+
+    border:1px solid rgba(255,255,255,.15);
+
+    border-radius:22px;
+
+    box-shadow:0 15px 40px rgba(0,0,0,.25);
+
+}
+
+.hero{
+
+    padding:40px;
+
+}
+
+.hero h1{
+
+    font-size:42px;
+
+    font-weight:700;
+
+}
+
+.hero p{
+
+    color:#d9d9d9;
+
+    font-size:18px;
+
+}
+
+.section-title{
+
+    margin-top:45px;
+
+    margin-bottom:20px;
+
+    font-weight:bold;
+
+}
+
+.info-card{
+
+    padding:25px;
+
+    transition:.35s;
+
+    height:100%;
+
+}
+
+.info-card:hover{
+
+    transform:translateY(-8px);
+
+}
+
+.info-card h4{
+
+    font-weight:bold;
+
+    margin-bottom:15px;
+
+}
+
+.info-card p{
+
+    color:#f2f2f2;
+
+}
+
+.value{
+
+    font-size:32px;
+
+    font-weight:bold;
+
+    color:#ffffff;
+
+}
+
+.badge-ai{
+
+    background:#22c55e;
+
+    color:white;
+
+    padding:8px 18px;
+
+    border-radius:30px;
+
+    font-size:14px;
+
+}
+.list-group-item{
+    background: rgba(255,255,255,0.08);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.15);
+}
+
+.list-group-item strong{
+    color: #38bdf8;
+    font-weight: bold;
+}
+
+.list-group{
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+</style>
+
+</head>
+
+<body>
+
+
+
+<div class="container">
+
+<div class="glass hero">
+
+<span class="badge-ai">
+
+<i class="fa-solid fa-robot"></i>
+
+AI Fitness Coach
+
+</span>
+
+<h1 class="mt-3">
+
+Hello {{ user.name }}
+
+</h1>
+
+<p>
+
+{{ ai.greeting }}
+
+</p>
+
+<p>
+
+Your AI coach has analysed your profile, BMI, activity level and fitness goal to prepare today's personalised recommendations.
+
+</p>
+
+</div>
+
+<h2 class="section-title">
+
+📊 Health Summary
+
+</h2>
+
+<div class="row g-4">
+
+<div class="col-md-4">
+
+<div class="glass info-card">
+
+<h4>
+
+BMI
+
+</h4>
+
+<div class="value">
+
+{{ profile.bmi }}
+
+</div>
+
+<p>
+
+{{ ai.bmi_analysis }}
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="glass info-card">
+
+<h4>
+
+Goal
+
+</h4>
+
+<div class="value">
+
+{{ profile.goal }}
+
+</div>
+
+<p>
+
+{{ ai.goal }}
+
+</p>
+
+</div>
+
+</div>
+
+<div class="col-md-4">
+
+<div class="glass info-card">
+
+<h4>
+
+Activity Level
+
+</h4>
+
+<div class="value">
+
+{{ profile.activity_level }}
+
+</div>
+
+<p>
+
+Stay consistent and follow your AI recommendations every day.
+
+</p>
+
+</div>
+
+</div>
+
+</div>
+<!-- ========================= -->
+<!-- AI MEAL PLANNER -->
+<!-- ========================= -->
+
+<h2 class="section-title">
+
+🍽 AI Meal Planner
+
+</h2>
+
+<div class="row g-4">
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-mug-hot"></i>
+
+                Breakfast
+
+            </h4>
+
+            <p>
+
+                {{ ai.breakfast }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-bowl-rice"></i>
+
+                Lunch
+
+            </h4>
+
+            <p>
+
+                {{ ai.lunch }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-utensils"></i>
+
+                Dinner
+
+            </h4>
+
+            <p>
+
+                {{ ai.dinner }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-apple-whole"></i>
+
+                Healthy Snacks
+
+            </h4>
+
+            <p>
+
+                {{ ai.snacks }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ========================= -->
+<!-- AI FITNESS RECOMMENDATIONS -->
+<!-- ========================= -->
+
+<h2 class="section-title">
+
+💪 AI Fitness Recommendations
+
+</h2>
+
+<div class="row g-4">
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-dumbbell"></i>
+
+                Workout Plan
+
+            </h4>
+
+            
+
+                <h4>🏋️ Weekly Workout Plan</h4>
+
+                <ul class="list-group mb-3">
+                    {% for day, plan in ai.workout.items() %}
+                        <li class="list-group-item">
+                            <strong>{{ day }}</strong>: {{ plan }}
+                        </li>
+                    {% endfor %}
+                </ul>
+
+            
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-glass-water"></i>
+
+                Water Intake
+
+            </h4>
+
+            <p>
+
+                {{ ai.water }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- ========================= -->
+<!-- RECOVERY -->
+<!-- ========================= -->
+
+<h2 class="section-title">
+
+😴 Recovery & Wellness
+
+</h2>
+
+<div class="row g-4">
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-bed"></i>
+
+                Sleep Recommendation
+
+            </h4>
+
+            <p>
+
+                {{ ai.sleep }}
+
+            </p>
+
+        </div>
+
+    </div>
+
+    <div class="col-lg-6">
+
+        <div class="glass info-card">
+
+            <h4>
+
+                <i class="fa-solid fa-heart-pulse"></i>
+
+                Health Tips
+
+            </h4>
+
+            <ul class="list-group mb-3">
+                {% for tip in ai.health_tips %}
+                    <li class="list-group-item">
+                        {{ tip }}
+                    </li>
+                {% endfor %}
+            </ul>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- ========================= -->
+<!-- DAILY MOTIVATION -->
+<!-- ========================= -->
+
+<h2 class="section-title">
+
+🔥 Daily Motivation
+
+</h2>
+
+<div class="glass hero">
+
+    <h3>
+
+        <i class="fa-solid fa-fire"></i>
+
+        Stay Motivated
+
+    </h3>
+
+    <p class="fs-5 mt-3">
+
+        {{ ai.motivation }}
+
+    </p>
+
+</div>
+
+<!-- ========================= -->
+<!-- AI SUMMARY -->
+<!-- ========================= -->
+
+<h2 class="section-title">
+
+📋 Today's AI Summary
+
+</h2>
+
+<div class="glass info-card">
+
+    <ul class="mb-0">
+
+        <li class="mb-3">
+            ✔ Follow the recommended meal plan.
+        </li>
+
+        <li class="mb-3">
+            ✔ Complete today's workout.
+        </li>
+
+        <li class="mb-3">
+            ✔ Drink enough water.
+        </li>
+
+        <li class="mb-3">
+            ✔ Get quality sleep.
+        </li>
+
+        <li>
+            ✔ Stay consistent to achieve your goal.
+        </li>
+
+    </ul>
+
+</div>
+
+<footer class="text-center mt-5 mb-4">
+
+    <hr class="text-light">
+
+    <p class="text-light">
+
+        🤖 Powered by (Llama 3.3 70B)• Smart Fitness Planner
+
+    </p>
+
+</footer>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

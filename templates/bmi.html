@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>BMI & BMR</h1>
+{% if profile %}
+<div class="grid">
+    <div class="card"><h3>BMI</h3><p>{{ profile.bmi }} - {{ bmi_category(profile.bmi) }}</p></div>
+    <div class="card"><h3>BMR</h3><p>{{ profile.bmr }} kcal</p></div>
+    <div class="card"><h3>Daily Calories</h3><p>{{ profile.calories }} kcal</p></div>
+</div>
+{% else %}
+<p class="muted">Complete your profile first.</p>
+{% endif %}
+{% endblock %}

@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section-heading">
+    <p class="eyebrow">Diet</p>
+    <h1>{{ goal|title }} Meal Plan</h1>
+    <p class="muted">Tap any meal to see what to eat and why it fits your goal.</p>
+</section>
+<div class="meal-grid">
+    {% for meal, text in plan.items() %}
+        {% set info = meal_details.get(meal) %}
+        <button class="meal-card" type="button" data-meal="{{ meal }}" data-title="{{ meal|replace('_', ' ')|title }}" data-text="{{ text }}" data-tip="{{ info.tip }}" data-foods="{{ info.foods|join(', ') }}" style="--meal-image: url('{{ info.image }}')">
+            <span>{{ meal|replace("_", " ")|title }}</span>
+        </button>
+    {% endfor %}
+</div>
+<section class="recommendation-panel" id="mealPanel">
+    <img id="mealImage" alt="Recommended meal image" src="{{ meal_details.get(plan.keys()|list|first).image }}">
+    <div>
+        <p class="eyebrow">Recommended Food</p>
+        <h2 id="mealTitle">{{ (plan.keys()|list|first)|replace("_", " ")|title }}</h2>
+        <p id="mealText">{{ plan.values()|list|first }}</p>
+        <p class="muted" id="mealTip">{{ meal_details.get(plan.keys()|list|first).tip }}</p>
+        <div class="chip-row" id="foodChips"></div>
+    </div>
+</section>
+<script>
+const mealCards = document.querySelectorAll(".meal-card");
+const mealImage = document.querySelector("#mealImage");
+const mealTitle = document.querySelector("#mealTitle");
+const mealText = document.querySelector("#mealText");
+const mealTip = document.querySelector("#mealTip");
+const foodChips = document.querySelector("#foodChips");
+function selectMeal(card) {
+    mealCards.forEach(item => item.classList.remove("active"));
+    card.classList.add("active");
+    mealTitle.textContent = card.dataset.title;
+    mealText.textContent = card.dataset.text;
+    mealTip.textContent = card.dataset.tip;
+    mealImage.src = getComputedStyle(card).getPropertyValue("--meal-image").replace(/^url\(["']?/, "").replace(/["']?\)$/, "");
+    foodChips.replaceChildren(
+        ...card.dataset.foods.split(", ").map(food => {
+            const chip = document.createElement("span");
+            chip.textContent = food;
+            return chip;
+        })
+    );
+}
+mealCards.forEach(card => card.addEventListener("click", () => selectMeal(card)));
+if (mealCards.length) selectMeal(mealCards[0]);
+</script>
+{% endblock %}

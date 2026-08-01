@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section-heading">
+    <p class="eyebrow">Progress</p>
+    <h1>Dynamic Progress Dashboard</h1>
+    <p class="muted">The chart updates from your profile, water, sleep, exercise, and progress entries.</p>
+</section>
+<section class="progress-hero">
+    <div class="chart">{{ chart|safe }}</div>
+    <aside class="progress-summary">
+        <h2>Coach Signals</h2>
+        <p class="muted">Use these prompts to decide what to improve first today.</p>
+        <a class="button" href="{{ url_for('profile') }}">Update Profile</a>
+    </aside>
+</section>
+<section class="lag-panel">
+    <h2>What You Are Lagging Behind</h2>
+    <div class="grid">
+        {% for insight in insights %}
+            <div class="card insight-card"><span>{{ loop.index }}</span>{{ insight }}</div>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

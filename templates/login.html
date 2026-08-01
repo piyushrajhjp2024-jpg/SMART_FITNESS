@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-shell">
+    <div class="auth-photo login-photo">
+        <div class="auth-caption">
+            <p class="eyebrow">Nature + Fitness</p>
+            <h1>Welcome back</h1>
+            <p>Pick up your plan, check today's progress, and keep your wellness rhythm alive.</p>
+        </div>
+    </div>
+
+    <form
+        method="post"
+        autocomplete="off">
+
+        
+
+        <!-- CSRF Token -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <h2>Login</h2>
+
+        <p class="muted login-copy">
+            Enter your email and password to continue to your dashboard.
+        </p>
+
+        <label>
+            Email
+            <input
+                type="email"
+                name="email"
+                value=""
+                autocomplete="off"
+                spellcheck="false"
+                autocorrect="off"
+                autocapitalize="off"
+                required>
+        </label>
+
+        <label>
+            Password
+            <input
+                type="password"
+                name="password"
+                value=""
+                autocomplete="new-password"
+                required>
+        </label>
+
+        <button type="submit">Login</button>
+
+        <p class="muted auth-links">
+            <a href="{{ url_for('forgot_password') }}">Forgot password?</a>
+            <span>
+                New here?
+                <a href="{{ url_for('register') }}">Create an account</a>
+            </span>
+        </p>
+    </form>
+</section>
+{% endblock %}

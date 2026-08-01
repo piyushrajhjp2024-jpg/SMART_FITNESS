@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>AI-Powered Smart Nutrition, Fitness & Wellness Planner</h1>
+        <p>Calculate BMI, BMR, calories, and get personalized diet, workout, yoga, water, sleep, and progress recommendations.</p>
+        <div class="actions">
+            <a class="button" href="{{ url_for('register') }}">Start Planning</a>
+            <a class="button secondary" href="{{ url_for('login') }}">Login</a>
+        </div>
+    </div>
+    <div class="hero-visual">
+        <div class="metric-stack">
+            <div class="metric">BMI <strong>22.4</strong></div>
+            <div class="metric">Daily Calories <strong>2450</strong></div>
+            <div class="metric">Goal <strong>Recomposition</strong></div>
+            <div class="metric">Water <strong>2.4L / 3L</strong></div>
+        </div>
+    </div>
+</section>
+{% endblock %}

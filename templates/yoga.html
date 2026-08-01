@@ -1,0 +1,153 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="yoga-hero">
+    <img class="yoga-hero-image" alt="Yoga recommendation" src="{{ detail.image }}">
+    <div>
+        <p class="eyebrow">Yoga</p>
+        <h1 class="yoga-flow-title">{{ focus|replace("_", " ")|title }} Flow</h1>
+        <p class="yoga-poses">{{ poses }}</p>
+    </div>
+</section>
+
+<div class="forms-grid">
+
+    <form class="form-panel" method="get" id="yogaFocusForm">
+
+        <h2>Choose Focus</h2>
+
+        <label>
+            Focus
+            <select name="focus" id="yogaFocusSelect">
+                {% for item in ["stress", "weight_loss", "flexibility", "back_pain", "sleep"] %}
+                    <option value="{{ item }}" {% if focus == item %}selected{% endif %}>
+                        {{ item|replace("_", " ")|title }}
+                    </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <button type="submit">Recommend</button>
+
+    </form>
+
+    <div class="form-panel">
+        <h2>10-15 Second Yoga Clip</h2>
+        <p class="muted active-video-name">
+            Showing: {{ focus|replace("_", " ")|title }} flow
+        </p>
+
+        <div class="video-frame">
+            <iframe
+                class="yoga-player"
+                src="{{ detail.video }}?start=0&end=15&rel=0&modestbranding=1"
+                title="{{ focus|replace('_', ' ')|title }} yoga clip"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+            </iframe>
+        </div>
+        <a class="video-link yoga-watch-link"
+           href="{{ detail.video|replace('https://www.youtube-nocookie.com/embed/', 'https://www.youtube.com/watch?v=') }}"
+           target="_blank"
+           rel="noopener">
+            Open this clip on YouTube
+        </a>
+    </div>
+
+</div>
+
+<div class="step-grid">
+    {% for step in detail.steps %}
+        <button class="step-card yoga-video-card"
+                type="button"
+                data-video="{{ step.video }}"
+                data-title="{{ step.name }}">
+            <strong>Step {{ loop.index }}</strong>
+            <span>{{ step.name }}</span>
+            <small>Play 15 sec clip</small>
+        </button>
+    {% endfor %}
+</div>
+
+<script>
+const yogaDetails = {{ yoga_details|tojson }};
+const yogaPoses = {{ yoga_poses|tojson }};
+const focusSelect = document.querySelector("#yogaFocusSelect");
+const yogaHeroImage = document.querySelector(".yoga-hero-image");
+const yogaFlowTitle = document.querySelector(".yoga-flow-title");
+const yogaPosesText = document.querySelector(".yoga-poses");
+const stepGrid = document.querySelector(".step-grid");
+const player = document.querySelector(".yoga-player");
+const activeVideoName = document.querySelector(".active-video-name");
+const watchLink = document.querySelector(".yoga-watch-link");
+
+function titleFromFocus(focus) {
+    return focus.replaceAll("_", " ").replace(/\b\w/g, letter => letter.toUpperCase());
+}
+
+function clipUrl(video, autoplay = false) {
+    const autoplayParam = autoplay ? "&autoplay=1" : "";
+    return `${video}?start=0&end=15${autoplayParam}&rel=0&modestbranding=1`;
+}
+
+function watchUrl(video) {
+    return video.replace("https://www.youtube-nocookie.com/embed/", "https://www.youtube.com/watch?v=");
+}
+
+function bindStepCards() {
+    document.querySelectorAll(".step-card").forEach(card => {
+        card.addEventListener("click", () => {
+            document.querySelectorAll(".step-card").forEach(item => item.classList.remove("done"));
+            card.classList.add("done");
+            player.src = clipUrl(card.dataset.video, true);
+            watchLink.href = watchUrl(card.dataset.video);
+            activeVideoName.textContent = `Showing: ${card.dataset.title}`;
+        });
+    });
+}
+
+function updateYogaFocus(focus) {
+    const detail = yogaDetails[focus] || yogaDetails.stress;
+    const title = titleFromFocus(focus);
+
+    yogaHeroImage.src = detail.image;
+    yogaFlowTitle.textContent = `${title} Flow`;
+    yogaPosesText.textContent = yogaPoses[focus] || yogaPoses.stress;
+    activeVideoName.textContent = `Showing: ${title} flow`;
+    player.title = `${title} yoga clip`;
+    player.src = clipUrl(detail.video);
+    watchLink.href = watchUrl(detail.video);
+
+    stepGrid.replaceChildren(
+        ...detail.steps.map((step, index) => {
+            const button = document.createElement("button");
+            const number = document.createElement("strong");
+            const name = document.createElement("span");
+            const hint = document.createElement("small");
+
+            button.className = "step-card yoga-video-card";
+            button.type = "button";
+            button.dataset.video = step.video;
+            button.dataset.title = step.name;
+            number.textContent = `Step ${index + 1}`;
+            name.textContent = step.name;
+            hint.textContent = "Play 15 sec clip";
+
+            button.append(number, name, hint);
+            return button;
+        })
+    );
+
+    bindStepCards();
+    const nextUrl = new URL(window.location.href);
+    nextUrl.searchParams.set("focus", focus);
+    window.history.replaceState({}, "", nextUrl);
+}
+
+focusSelect.addEventListener("change", () => {
+    updateYogaFocus(focusSelect.value);
+});
+
+bindStepCards();
+</script>
+
+{% endblock %}

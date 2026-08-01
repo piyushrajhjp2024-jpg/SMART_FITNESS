@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="logout-panel dynamic-logout">
+
+    <div class="logout-orbit" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+    </div>
+
+    <p class="eyebrow">Logout</p>
+
+    <h1>Wrap up this session?</h1>
+
+    <p class="muted">
+        Your plans and progress stay saved for the next login.
+    </p>
+
+    <div class="logout-stats">
+        <div>
+            <strong>Diet</strong>
+            <span>Saved</span>
+        </div>
+
+        <div>
+            <strong>Workout</strong>
+            <span>Ready</span>
+        </div>
+
+        <div>
+            <strong>Progress</strong>
+            <span>Synced</span>
+        </div>
+    </div>
+
+    <form method="post">
+
+        <!-- CSRF Token -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <button type="submit">
+            Yes, Logout
+        </button>
+
+        <a class="button secondary" href="{{ url_for('dashboard') }}">
+            Stay Logged In
+        </a>
+
+    </form>
+
+</section>
+
+{% endblock %}

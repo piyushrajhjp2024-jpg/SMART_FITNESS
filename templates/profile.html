@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="section-heading">
+    <p class="eyebrow">Profile</p>
+    <h1>Your Body Details</h1>
+</section>
+
+<div class="profile-layout">
+    <aside class="profile-photo-card">
+        <img id="profilePreview"
+             alt="Profile preview"
+             src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=700&q=80">
+
+        <label class="file-picker">
+            Add Your Image
+            <input id="profileImage" type="file" accept="image/*">
+        </label>
+
+        <p class="muted">
+            Preview stays in this browser while you update your fitness details.
+        </p>
+    </aside>
+
+    <form class="form-panel" method="post">
+
+        <!-- CSRF Token -->
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+        <h2>User Profile</h2>
+
+        <div class="two-col">
+
+            <label>
+                Age
+                <input type="number"
+                       name="age"
+                       value="{{ profile.age if profile else '' }}"
+                       required
+                       min="10">
+            </label>
+
+            <label>
+                Gender
+                <select name="gender" required>
+                    {% for item in ["male", "female"] %}
+                    <option value="{{ item }}"
+                        {% if profile and profile.gender == item %}selected{% endif %}>
+                        {{ item|title }}
+                    </option>
+                    {% endfor %}
+                </select>
+            </label>
+
+            <label>
+                Height (cm)
+                <input type="number"
+                       step="0.1"
+                       name="height_cm"
+                       value="{{ profile.height_cm if profile else '' }}"
+                       required>
+            </label>
+
+            <label>
+                Weight (kg)
+                <input type="number"
+                       step="0.1"
+                       name="weight_kg"
+                       value="{{ profile.weight_kg if profile else '' }}"
+                       required>
+            </label>
+
+        </div>
+
+        <label>
+            Activity Level
+            <select name="activity_level">
+                {% for item in ["sedentary", "light", "moderate", "active", "very_active"] %}
+                <option value="{{ item }}"
+                    {% if profile and profile.activity_level == item %}selected{% endif %}>
+                    {{ item|replace("_", " ")|title }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Experience
+            <select name="experience">
+                {% for item in ["beginner", "intermediate", "advanced"] %}
+                <option value="{{ item }}"
+                    {% if profile and profile.experience == item %}selected{% endif %}>
+                    {{ item|title }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <label>
+            Goal
+            <select name="goal">
+                {% for item in ["bulk", "cut", "recomposition", "maintain"] %}
+                <option value="{{ item }}"
+                    {% if profile and profile.goal == item %}selected{% endif %}>
+                    {{ item|title }}
+                </option>
+                {% endfor %}
+            </select>
+        </label>
+
+        <button type="submit">Save Profile</button>
+
+    </form>
+</div>
+
+<script>
+const imageInput = document.querySelector("#profileImage");
+const preview = document.querySelector("#profilePreview");
+
+const cachedPhoto = localStorage.getItem("profilePhoto");
+if (cachedPhoto) {
+    preview.src = cachedPhoto;
+}
+
+imageInput.addEventListener("change", () => {
+    const file = imageInput.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+        preview.src = reader.result;
+        localStorage.setItem("profilePhoto", reader.result);
+    };
+
+    reader.readAsDataURL(file);
+});
+</script>
+
+{% endblock %}
