@@ -22,7 +22,7 @@ def create_chat_completion(
     max_tokens=400,
     response_format=None,
 ):
-    api_key = os.getenv("GROQ_API_KEY")
+    api_key = (os.getenv("GROQ_API_KEY") or "").strip()
     if not api_key:
         raise RuntimeError("GROQ_API_KEY is not configured")
 
