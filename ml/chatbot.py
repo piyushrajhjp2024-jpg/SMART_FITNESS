@@ -2,7 +2,7 @@ import os
 import logging
 
 from dotenv import load_dotenv
-from ml.groq_client import create_chat_completion
+from ml.groq_client import GroqConfigurationError, create_chat_completion
 
 load_dotenv()
 
@@ -79,6 +79,9 @@ Question:
 
         return reply
 
+    except GroqConfigurationError:
+        logger.error("GROQ_API_KEY is not configured")
+        return "AI assistant is not configured on the server. Please add GROQ_API_KEY in Render environment variables."
     except Exception:
         logger.exception("Groq chatbot request failed")
-        return "Sorry, something went wrong."
+        return "Sorry, I could not reach the AI assistant right now. Please try again."

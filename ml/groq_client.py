@@ -13,7 +13,11 @@ GROQ_API_URL = os.getenv(
     "GROQ_API_URL",
     "https://api.groq.com/openai/v1/chat/completions",
 )
-GROQ_MODEL = os.getenv("GROQ_MODEL", "llama-3.3-70b-versatile")
+GROQ_MODEL = os.getenv("GROQ_MODEL", "openai/gpt-oss-120b")
+
+
+class GroqConfigurationError(RuntimeError):
+    pass
 
 
 def create_chat_completion(
@@ -24,7 +28,7 @@ def create_chat_completion(
 ):
     api_key = (os.getenv("GROQ_API_KEY") or "").strip()
     if not api_key:
-        raise RuntimeError("GROQ_API_KEY is not configured")
+        raise GroqConfigurationError("GROQ_API_KEY is not configured")
 
     payload = {
         "model": GROQ_MODEL,

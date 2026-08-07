@@ -42,6 +42,19 @@ set MAIL_PASSWORD=your_gmail_app_password
 set MAIL_DEFAULT_SENDER=your_email@gmail.com
 ```
 
+## Render deployment notes
+
+Add these environment variables in Render under **Environment** before deploying:
+
+```bash
+GROQ_API_KEY=your_groq_api_key
+GROQ_MODEL=openai/gpt-oss-120b
+SECRET_KEY=your_secret_key
+DATABASE_URL=your_database_url
+```
+
+The local `.env` file is ignored by Git and will not be uploaded to GitHub or Render.
+
 Run:
 
 ```bash

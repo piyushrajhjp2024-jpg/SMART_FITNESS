@@ -2,7 +2,7 @@ import os
 import json
 import logging
 from dotenv import load_dotenv
-from ml.groq_client import create_chat_completion
+from ml.groq_client import GroqConfigurationError, create_chat_completion
 
 load_dotenv()
 
@@ -150,6 +150,9 @@ Rules:
 
         return normalize_fitness_plan(json.loads(content))
 
+    except GroqConfigurationError:
+        logger.error("GROQ_API_KEY is not configured")
+        return _fallback_plan("AI Coach is not configured on the server. Please add GROQ_API_KEY in Render environment variables.")
     except Exception:
         logger.exception("Groq AI coach request failed")
         return _fallback_plan()
